@@ -49,7 +49,7 @@ issuesRouter.post('/', validateIssue, (req, res, next) => {
                     if (error) {
                         next(error);
                     } else {
-                        res.status(201).json({series: data});
+                        res.status(201).json({issue: data});
                     }
                 });
             }
