@@ -16,9 +16,9 @@ app.use(errorhandler());
 
 app.use('/api', apiRouter);
 
-app.get('/', (req, res, next) => {
-    res.send("<h1>Welcome to X-Press Publishing</h1>");
-});
+//app.get('/', (req, res, next) => {
+//    res.send("<h1>Welcome to X-Press Publishing</h1>");
+//});
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
