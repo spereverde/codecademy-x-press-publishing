@@ -37,11 +37,12 @@ artistsRouter.get('/:artistId', (req, res, next) => {
 
 const validateArtist = (req, res, next) => {
   const artistToCreate = req.body.artist;
-  const isCurrentlyEmployed = artistToCreate.isCurrentlyEmployed === 0 ? 0: 1;
+  const isCurrentlyEmployed = artistToCreate.isCurrentlyEmployed === 0 ? 0 : 1;
   if (!artistToCreate.name || !artistToCreate.dateOfBirth || !artistToCreate.biography) {
     return res.sendStatus(400);
+  } else {
+      next();
   }
-  next();
 };
 
 artistsRouter.post('/', validateArtist, (req, res, next) => {
@@ -56,7 +57,7 @@ artistsRouter.post('/', validateArtist, (req, res, next) => {
             $isCurrentlyEmployed: artistToCreate.isCurrentlyEmployed
         }, function (error) {
             if (error) {
-                next.error();
+                next(error);
             }
             db.get(`SELECT * FROM Artist WHERE id = ${this.lastID}`, (error, artist) => {
                 if (!artist) {
@@ -64,6 +65,21 @@ artistsRouter.post('/', validateArtist, (req, res, next) => {
                 }
                 res.status(201).send.json({artist: artist});
             });
+    });
+});
+
+artistsRouter.put('/:artistId', validateArtist, (req, res, next) => {
+    const sql = `UPDATE Artist SET name=${req.name}, date_of_birth=${req.dateOfBirth}, 
+        biography=${req.biography}, is_currently_employed=${req.isCurrentlyEmployed}
+        WHERE id = ${req.params.artistId}`;
+    db.run(sql, (error, row) => {
+        if (error) {
+            next(error);
+        } else {
+            db.get(`SELECT * FROM Artist WHERE id = ${req.params.artistId}`,(error, row) => {
+                res.status(200).json({artist: row});
+            });
+        }
     });
 });
 
