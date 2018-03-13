@@ -75,7 +75,7 @@ issuesRouter.post('/', validateIssue, (req, res, next) => {
         });
 });*/
 
-/*issuesRouter.delete('/:issueId', (req, res, next) => {
+issuesRouter.delete('/:issueId', (req, res, next) => {
     db.run(`DELETE FROM Issue WHERE id = ${req.params.issueId}`, (error) => {
         if (error) {
             next(error);
@@ -83,6 +83,6 @@ issuesRouter.post('/', validateIssue, (req, res, next) => {
             res.sendStatus(204);
         }
     });
-});*/
+});
 
 module.exports = issuesRouter;
