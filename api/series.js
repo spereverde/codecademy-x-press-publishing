@@ -55,4 +55,42 @@ seriesRouter.post('/', validateSeries, (req, res, next) => {
         });
 });
 
+seriesRouter.put('/:seriesId', validateSeries, (req, res, next)=> {
+    db.run(`UPDATE Series SET name= "${req.name}", description = "${req.description}"
+        WHERE id = ${req.params.seriesId}`,
+        function(error) {
+            if (error) {
+                next(error);
+            } else {
+                db.get(`SELECT * FROM Series WHERE id = ${req.params.seriesId} `, (error, data) => {
+                    if (error) {
+                        next(error);
+                    } else {
+                        res.status(200).json({series: data})
+                    }
+                });
+            }
+        });
+});
+
+seriesRouter.delete('/:seriesId', (req, res, next) => {
+    db.get(`SELECT * FROM Series WHERE id = "${req.params.seriesId}"`, (error, data) => {
+        if (error) {
+            next(error);
+        } else {
+            if (!data) {
+                res.sendStatus(400);
+            } else {
+                db.run(`DELETE FROM Series WHERE id = ${req.params.seriesId}`, (error) => {
+                    if (error) {
+                        next(error);
+                    } else {
+                        res.sendStatus(204);
+                    }
+                });
+            }
+        }
+    });
+});
+
 module.exports = seriesRouter;
