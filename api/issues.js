@@ -56,10 +56,10 @@ issuesRouter.post('/', validateIssue, (req, res, next) => {
         });
 });
 
-/*issuesRouter.put('/:issueId', validateIssue, (req, res, next) => {
-    db.run(`UPDATE Issue SET name = "${req.name}", issue_number = "${req.issueNumber}", publication_date = "${req.publicationDate}",
+issuesRouter.put('/:issueId', validateIssue, (req, res, next) => {
+    db.run(`UPDATE Issue SET name = "${req.name}", issue_number = ${req.issueNumber}, publication_date = "${req.publicationDate}",
         artist_id = ${req.artistId}, series_id = ${req.params.seriesId}  
-        WHERE issue_id = ${req.params.issueId})`,
+        WHERE id = ${req.params.issueId}`,
         function (error, data) {
             if (error) {
                 next(error);
@@ -68,12 +68,12 @@ issuesRouter.post('/', validateIssue, (req, res, next) => {
                     if (error) {
                         next(error);
                     } else {
-                        res.status(201).json({series: data});
+                        res.status(200).json({issue: data});
                     }
                 });
             }
         });
-});*/
+});
 
 issuesRouter.delete('/:issueId', (req, res, next) => {
     db.run(`DELETE FROM Issue WHERE id = ${req.params.issueId}`, (error) => {
